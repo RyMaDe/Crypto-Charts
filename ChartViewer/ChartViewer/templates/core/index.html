@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>ChartViewer</title>
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/styles.css' %}">
+    </head>
+    <body>
+        <div id="main">
+            <div id="app"></div>
+
+            <div id="search-input">
+                <input type="search" placeholder="Search" id="search-bar" value = {{ Crypto }}>
+                <div id="content">
+                    <ul id="search-list">
+                        <!-- <li>All list items</li> -->
+                    </ul>
+                </div>
+            </div>
+
+            <svg id="dataVis"></svg>
+
+        </div>
+
+        <script type="module" src="{% static 'frontend/index.js' %}"></script>
+        <script src="{% static 'd3/dist/d3.min.js' %}"></script>
+        <script src="{% static 'axios/dist/axios.min.js' %}"></script>
+    </body>
+</html>

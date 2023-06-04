@@ -5,5 +5,5 @@ from . import views
 
 app_name = "core"
 urlpatterns = [
-    path("", views.ChartPage.as_view(), name = "ChartPage"),
+    path("CoinData", views.CoinDataAPI.as_view(), name = "CoinDataAPI"),
 ]
