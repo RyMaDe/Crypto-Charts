@@ -64,29 +64,41 @@ async function dataAPICall(coin){
 }
 
 function GraphUpdate(Data) { // Setting up the graph
-    console.log(Data) // Testing data is available
+    //console.log(Data) // Testing data is available
 
-    const width = 1000, height = 350;
-    const x_scale = d3.scaleBand().range([0, width])
-    const y_scale = d3.scaleLinear().range([height,0])
+    const width = 960, height = 500;
+    const margin = { top: 20, right: 10, bottom: 50, left: 50 };
+    const x_scale = d3.scaleTime().rangeRound([margin.left, width-margin.right])
+    const y_scale = d3.scaleLinear().rangeRound([height-margin.bottom, margin.top])
 
     for (const d in Data["Time Series (Digital Currency Daily)"]){
+        let newDate = new Date(d3.timeParse("%Y-%m-%d")(d))
         Data["Time Series (Digital Currency Daily)"][d]["4b. close (USD)"] = +Data["Time Series (Digital Currency Daily)"][d]["4b. close (USD)"]
+        Data["Time Series (Digital Currency Daily)"][d]["date"] = newDate;
     }
 
-    const dataArray = Object.entries(Data["Time Series (Digital Currency Daily)"])
-    x_scale.domain(Object.keys(Data["Time Series (Digital Currency Daily)"]))
+    let dataArray = Object.entries(Data["Time Series (Digital Currency Daily)"])
+    x_scale.domain(d3.extent(Object.values(Data["Time Series (Digital Currency Daily)"]), d => d["date"]))
     y_scale.domain([0, d3.max(Object.values(Data["Time Series (Digital Currency Daily)"]), d => d["4b. close (USD)"])])
 
     let svg = d3.select("#dataVis")
             .attr("width", width)
             .attr("height", height)
-            .selectAll("rect")
-            .data(dataArray)
-            .join("rect")
-                .attr("class", "bar")
-                .attr("x", d => x_scale(d[0]))
-                .attr("y", d => y_scale(d[1]["4b. close (USD)"]))
-                .attr("width", x_scale.bandwidth())
-                .attr("height", d => height - y_scale(d[1]["4b. close (USD)"]))
+
+    svg.append("g")
+        .attr("transform", "translate("+0+","+(height-margin.bottom)+")")
+        .call(d3.axisBottom(x_scale));
+
+    svg.append("g")
+        .attr("transform", "translate("+margin.left+","+0+")")
+        .call(d3.axisLeft(y_scale));
+
+    svg.append("path")
+    .datum(dataArray)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("d", d3.line()
+        .x(d => x_scale(d[1]["date"])) 
+        .y(d => y_scale(d[1]["4b. close (USD)"]))
+        )
 }

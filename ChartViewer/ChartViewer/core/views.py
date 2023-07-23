@@ -13,5 +13,5 @@ class CoinDataAPI(APIView):
         coin = request.GET.get("coin") # coin symbol
         url = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol="+coin+"&market=GBP&apikey="
         data = requests.get(url+env("Alphavantage_API")).json()
-        
+        #print(json.dumps(data, indent=4))
         return Response(data)
