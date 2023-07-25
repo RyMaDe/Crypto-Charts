@@ -1,11 +1,19 @@
 body {
-    background-color: lightblue;
+    background-color: rgb(190, 202, 206);
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
 }
 
 #main {
     position: relative;
     margin: 20px;
+}
+
+#app {
+    background: rgb(0, 110, 255);
+    margin: 0;
+    padding-left: 15px;
+    border: 1px solid rgb(0, 110, 255);
 }
 
 #search-input {
@@ -68,6 +76,6 @@ svg#dataVis {
     position: absolute;
     /*width: calc(100% - 320px);
     left: 310px; */ 
-    top: 100px;
+    top: 50px;
     right: 5px;
 }

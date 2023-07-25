@@ -64,7 +64,7 @@ async function dataAPICall(coin){
 }
 
 function GraphUpdate(Data) { // Setting up the graph
-    //console.log(Data) // Testing data is available
+    console.log(Data) // Testing data is available
 
     const width = 960, height = 500;
     const margin = { top: 20, right: 10, bottom: 50, left: 50 };
