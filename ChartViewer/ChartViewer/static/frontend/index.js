@@ -84,6 +84,8 @@ function GraphUpdate(Data) { // Setting up the graph
     let svg = d3.select("#dataVis")
             .attr("width", width)
             .attr("height", height)
+            .attr("viewBox", [0, 0, width, height])
+            .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
 
     svg.append("g")
         .attr("transform", "translate("+0+","+(height-margin.bottom)+")")
