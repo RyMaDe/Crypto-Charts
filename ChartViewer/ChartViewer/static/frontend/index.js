@@ -85,7 +85,9 @@ function GraphUpdate(Data) { // Setting up the graph
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", [0, 0, width, height])
-            .attr("style", "max-width: 100%; height: auto; height: intrinsic;");
+            .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
+    
+    svg.selectAll("*").remove()
 
     svg.append("g")
         .attr("transform", "translate("+0+","+(height-margin.bottom)+")")
@@ -103,4 +105,5 @@ function GraphUpdate(Data) { // Setting up the graph
         .x(d => x_scale(d[1]["date"])) 
         .y(d => y_scale(d[1]["4b. close (USD)"]))
         )
+
 }
