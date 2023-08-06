@@ -67,7 +67,7 @@ function GraphUpdate(Data) { // Setting up the graph
     console.log(Data) // Testing data is available
 
     const width = 960, height = 500;
-    const margin = { top: 20, right: 10, bottom: 50, left: 50 };
+    const margin = { top: 20, right: 10, bottom: 50, left: 60 };
     const x_scale = d3.scaleTime().rangeRound([margin.left, width-margin.right])
     const y_scale = d3.scaleLinear().rangeRound([height-margin.bottom, margin.top])
 
@@ -89,12 +89,12 @@ function GraphUpdate(Data) { // Setting up the graph
     
     svg.selectAll("*").remove()
 
-    svg.append("g")
+    svg.append("g") // x-axis
         .attr("transform", "translate("+0+","+(height-margin.bottom)+")")
         .call(d3.axisBottom(x_scale));
 
-    svg.append("g")
-        .attr("transform", "translate("+margin.left+","+0+")")
+    svg.append("g") // y-axis
+        .attr("transform", "translate("+(margin.left)+","+0+")")
         .call(d3.axisLeft(y_scale));
 
     svg.append("path")
@@ -105,5 +105,23 @@ function GraphUpdate(Data) { // Setting up the graph
         .x(d => x_scale(d[1]["date"])) 
         .y(d => y_scale(d[1]["4b. close (USD)"]))
         )
+        /*.append("title")
+        .text((d) => 
+        `date: ${d[1]["date"]}\n
+        open: ${d[1]["1b. open (USD)"]}\n
+        close: ${d[1]["4b. close (USD)"]}\n
+        high: ${d[1]["2b. high (USD)"]}\n
+        low: ${d[1]["3b. low (USD)"]}`) */
 
+    svg.append("text") // y label
+        .attr("transform", "rotate(-90)")
+        .attr("y", 13)
+        .attr("x", -height/2)
+        .style("text-anchor", "middle")
+        .text("USD")
+
+    svg.append("text") // x label
+        .attr("x", width/2)
+        .attr("y", height)
+        .text("Date")
 }

@@ -75,7 +75,7 @@ body {
 svg#dataVis {
     position: absolute;
     /*width: calc(100% - 320px);
-    left: 310px; */ 
+    left: 310px; */
     top: 50px;
     right: 5px;
 }
