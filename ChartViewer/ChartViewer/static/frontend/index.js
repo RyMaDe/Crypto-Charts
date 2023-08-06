@@ -105,6 +105,10 @@ function GraphUpdate(Data) { // Setting up the graph
         .x(d => x_scale(d[1]["date"])) 
         .y(d => y_scale(d[1]["4b. close (USD)"]))
         )
+        .attr("stroke-width", 0)
+        .transition()
+        .duration(350)
+        .attr("stroke-width", 2)
         /*.append("title")
         .text((d) => 
         `date: ${d[1]["date"]}\n
