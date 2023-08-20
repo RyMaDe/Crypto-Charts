@@ -86,7 +86,7 @@ function GraphUpdate(Data) { // Setting up the graph
             .attr("height", height)
             .attr("viewBox", [0, 0, width, height])
             .attr("style", "max-width: 100%; height: auto; height: intrinsic;")
-    
+
     svg.selectAll("*").remove()
 
     svg.append("g") // x-axis
@@ -109,13 +109,6 @@ function GraphUpdate(Data) { // Setting up the graph
         .transition()
         .duration(350)
         .attr("stroke-width", 2)
-        /*.append("title")
-        .text((d) => 
-        `date: ${d[1]["date"]}\n
-        open: ${d[1]["1b. open (USD)"]}\n
-        close: ${d[1]["4b. close (USD)"]}\n
-        high: ${d[1]["2b. high (USD)"]}\n
-        low: ${d[1]["3b. low (USD)"]}`) */
 
     svg.append("text") // y label
         .attr("transform", "rotate(-90)")
@@ -128,4 +121,56 @@ function GraphUpdate(Data) { // Setting up the graph
         .attr("x", width/2)
         .attr("y", height)
         .text("Date")
+
+    // Adding tooltip
+    const focus = svg.append("g")
+        .attr("class", "focus")
+        .style("display", "none")
+
+    focus.append("line")
+        .attr("class", "x")
+        .style("stroke-dasharray", "3,3")
+        .attr("stroke", "black")
+        .style("opacity", 0.5)
+        .attr("y1", 0)
+        .attr("y2", height-margin.bottom)
+
+    focus.append("text")
+        .attr("class", "y1")
+        .text("Testing to see where this shows")
+        .attr("y", 20)
+
+    function mouseMove(event){
+        const bisect = d3.bisector((d) => d[1]["date"]).left,
+        x0 = x_scale.invert(d3.pointer(event, this)[0]),
+        i = bisect(dataArray, x0),
+        d = dataArray[i]
+        console.log(i, d, x0)
+
+        focus.select(".x")
+            .attr("transform", "translate(" + x_scale(d[1]["date"]) + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
+            .attr("y2", height-margin.bottom-y_scale(d[1]["4b. close (USD)"]))
+    }
+
+    svg.append("rect")
+        .attr("width", width-margin.right)
+        .attr("height", height-margin.bottom-margin.top)
+        .attr("transform", "translate("+ 0+","+margin.top+")")
+        .style("fill", "none")
+        .style("pointer-events", "all")
+        .on("mouseover", () => {
+            focus.style("display", null)
+        })
+        .on("mouseout", ()=>{
+            focus.style("display", "none")
+        })
+        .on("touchmove mousemove", mouseMove)
+
+    /*.append("title")
+        .text((d) => 
+        `date: ${d[1]["date"]}\n
+        open: ${d[1]["1b. open (USD)"]}\n
+        close: ${d[1]["4b. close (USD)"]}\n
+        high: ${d[1]["2b. high (USD)"]}\n
+        low: ${d[1]["3b. low (USD)"]}`) */
 }

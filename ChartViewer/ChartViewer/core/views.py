@@ -14,4 +14,8 @@ class CoinDataAPI(APIView):
         url = "https://www.alphavantage.co/query?function=DIGITAL_CURRENCY_DAILY&symbol="+coin+"&market=GBP&apikey="
         data = requests.get(url+env("Alphavantage_API")).json()
         #print(json.dumps(data, indent=4))
+        #print(json.dumps(data["Time Series (Digital Currency Daily)"], indent =4))
+        timeSeries = dict(reversed(list(data["Time Series (Digital Currency Daily)"].items())))
+        data["Time Series (Digital Currency Daily)"] = timeSeries
+
         return Response(data)
