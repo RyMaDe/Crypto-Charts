@@ -137,7 +137,6 @@ function GraphUpdate(Data) { // Setting up the graph
 
     focus.append("text")
         .attr("class", "y1")
-        .text("Testing to see where this shows")
         .attr("y", 20)
         .attr("x", margin.left)
 
@@ -151,9 +150,9 @@ function GraphUpdate(Data) { // Setting up the graph
         focus.select(".x")
             .attr("transform", "translate(" + x_scale(d[1]["date"]) + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
             .attr("y2", height-margin.bottom-y_scale(d[1]["4b. close (USD)"]))
-        
+
         focus.select(".y1")
-            .text(`date: ${d[1]["date"]} open: ${+d[1]["1b. open (USD)"]} 
+            .text(`date: ${d[1]["date"].toLocaleString().split(",")[0]} open: ${+d[1]["1b. open (USD)"]} 
             close: ${d[1]["4b. close (USD)"]} high: ${+d[1]["2b. high (USD)"]} 
             low: ${+d[1]["3b. low (USD)"]}`)
     }
@@ -172,11 +171,4 @@ function GraphUpdate(Data) { // Setting up the graph
         })
         .on("touchmove mousemove", mouseMove)
 
-    /*.append("title")
-        .text((d) => 
-        `date: ${d[1]["date"]}\n
-        open: ${d[1]["1b. open (USD)"]}\n
-        close: ${d[1]["4b. close (USD)"]}\n
-        high: ${d[1]["2b. high (USD)"]}\n
-        low: ${d[1]["3b. low (USD)"]}`) */
 }
