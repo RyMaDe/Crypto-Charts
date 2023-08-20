@@ -135,17 +135,22 @@ function GraphUpdate(Data) { // Setting up the graph
         .attr("y1", 0)
         .attr("y2", height-margin.bottom)
 
-    focus.append("text")
+    focus.append("text") // Legend
         .attr("class", "y1")
         .attr("y", 20)
         .attr("x", margin.left)
+    
+    focus.append("text")
+        .attr("class", "y2")
+        .attr("x", margin.left+3)
+        .style("font-size", "11px")
 
     function mouseMove(event){
         const bisect = d3.bisector((d) => d[1]["date"]).left,
         x0 = x_scale.invert(d3.pointer(event, this)[0]),
         i = bisect(dataArray, x0),
         d = dataArray[i]
-        console.log(i, d, x0)
+        //console.log(i, d, x0)
 
         focus.select(".x")
             .attr("transform", "translate(" + x_scale(d[1]["date"]) + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
@@ -155,6 +160,10 @@ function GraphUpdate(Data) { // Setting up the graph
             .text(`date: ${d[1]["date"].toLocaleString().split(",")[0]} open: ${+d[1]["1b. open (USD)"]} 
             close: ${d[1]["4b. close (USD)"]} high: ${+d[1]["2b. high (USD)"]} 
             low: ${+d[1]["3b. low (USD)"]}`)
+
+        focus.select(".y2")
+            .attr("transform", "translate(" + 0 + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
+            .text(`${d[1]["4b. close (USD)"]}`)
     }
 
     svg.append("rect")
