@@ -81,7 +81,16 @@ function GraphUpdate(Data) { // Setting up the graph
     x_scale.domain(d3.extent(Object.values(Data["Time Series (Digital Currency Daily)"]), d => d["date"]))
     y_scale.domain([0, d3.max(Object.values(Data["Time Series (Digital Currency Daily)"]), d => d["4b. close (USD)"])])
 
+    let x_scale_Tooltip = x_scale // Created a copy of the x_scale for use by the tooltip after zoom or panning.
+
+    // creating zoom behaviour.
+    const zoom = d3.zoom()
+        .scaleExtent([1, 10])
+        .translateExtent([[-width+margin.left+margin.right, -height+margin.bottom+margin.top], [(width-margin.right)+width-margin.right-margin.bottom,(height)+height-margin.top-margin.bottom]])
+        .on("zoom", zoomed);
+
     let svg = d3.select("#dataVis")
+            .call(zoom)  // For zoom to work
             .attr("width", width)
             .attr("height", height)
             .attr("viewBox", [0, 0, width, height])
@@ -90,15 +99,26 @@ function GraphUpdate(Data) { // Setting up the graph
     svg.selectAll("*").remove()
 
     svg.append("g") // x-axis
+        .attr("class", "x axis")
         .attr("transform", "translate("+0+","+(height-margin.bottom)+")")
         .call(d3.axisBottom(x_scale));
 
     svg.append("g") // y-axis
+        .attr("class", "y axis")
         .attr("transform", "translate("+(margin.left)+","+0+")")
         .call(d3.axisLeft(y_scale));
 
+    svg.append("defs") // Adding a clipPath for the Zoom.
+        .append("clipPath")
+        .attr("id", "chart-path")
+        .append("rect")
+        .attr("width", width-margin.right-margin.left)
+        .attr("height", height-margin.bottom-margin.top)
+        .attr("transform", "translate("+margin.left+","+(margin.top)+")")
+
     svg.append("path")
     .datum(dataArray)
+        .attr("class", "line")
         .attr("fill", "none")
         .attr("stroke", "steelblue")
         .attr("d", d3.line()
@@ -109,6 +129,7 @@ function GraphUpdate(Data) { // Setting up the graph
         .transition()
         .duration(350)
         .attr("stroke-width", 2)
+        .attr("clip-path", "url(#chart-path)")  // Applying the zoom clipPath to the line chart.
 
     svg.append("text") // y label
         .attr("transform", "rotate(-90)")
@@ -140,20 +161,20 @@ function GraphUpdate(Data) { // Setting up the graph
         .attr("y", 20)
         .attr("x", margin.left)
     
-    focus.append("text")
+    focus.append("text") // tooltip closing price along the y-axis
         .attr("class", "y2")
         .attr("x", margin.left+3)
         .style("font-size", "11px")
 
     function mouseMove(event){
         const bisect = d3.bisector((d) => d[1]["date"]).left,
-        x0 = x_scale.invert(d3.pointer(event, this)[0]),
+        x0 = x_scale_Tooltip.invert(d3.pointer(event, this)[0]), // Using x_scale copy for the tooltip
         i = bisect(dataArray, x0),
         d = dataArray[i]
         //console.log(i, d, x0)
 
         focus.select(".x")
-            .attr("transform", "translate(" + x_scale(d[1]["date"]) + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
+            .attr("transform", "translate(" + x_scale_Tooltip(d[1]["date"]) + "," + y_scale(d[1]["4b. close (USD)"]) + ")")
             .attr("y2", height-margin.bottom-y_scale(d[1]["4b. close (USD)"]))
 
         focus.select(".y1")
@@ -180,4 +201,19 @@ function GraphUpdate(Data) { // Setting up the graph
         })
         .on("touchmove mousemove", mouseMove)
 
+    // Creating the zoomed function for zoom.
+    function zoomed({transform}) {
+        const newX = transform.rescaleX(x_scale)
+        //const newY = transform.rescaleY(y_scale)
+        x_scale_Tooltip = newX
+        // Zooming and panning only in the x direction. If adding Y, update tooltip too.
+
+        svg.select(".x.axis").call(d3.axisBottom(newX))
+        //svg.select(".y.axis").call(d3.axisLeft(newY))
+        svg.selectAll("path.line")
+            .attr("d", d3.line()
+            .x(d => newX(d[1]["date"])) 
+            .y(d => y_scale(d[1]["4b. close (USD)"])) // Only zoom & pan in x axis
+            )
+    }
 }
