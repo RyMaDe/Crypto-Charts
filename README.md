@@ -1,5 +1,5 @@
 # Crypto Chart Viewer
-Webpage to view charts for cryptocurrencies.
+Webpage to view interactive charts for cryptocurrencies.
 
 ## Guide
 Enter the symbol or the name of the coin in the search box and select the correct coin. The graph will update.
