@@ -58,8 +58,6 @@ function showSuggestions(arr) {
 
 async function dataAPICall(coin){
     const response = await axios.get("/api/CoinData", {params: {"coin": coin.split(" - ")[0]}});
-    // {% url 'core:CoinDataAPI' %} "/api/CoinData"
-    // console.log(response.data)
     GraphUpdate(response.data)
 }
 
@@ -201,7 +199,7 @@ function GraphUpdate(Data) { // Setting up the graph
         })
         .on("touchmove mousemove", mouseMove)
 
-    // Creating the zoomed function for zoom.
+    // Adding Zoom.
     function zoomed({transform}) {
         const newX = transform.rescaleX(x_scale)
         //const newY = transform.rescaleY(y_scale)

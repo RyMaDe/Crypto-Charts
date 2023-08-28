@@ -19,6 +19,8 @@ from django.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    # All urls relevant for the API:
     path("api/", include("ChartViewer.core.urls")),
+    # All urls relevant for the frontend:
     path("", include("ChartViewer.frontend.urls")),
 ]
